@@ -46,8 +46,9 @@ app.post('/', async (req, res) => {
           const smtpPort = Number(process.env.MAIL_PORT) || 587;
           const transporter = nodemailer.createTransport({
             host: process.env.MAIL_HOST,
-            port: smtpPort,
-            secure: smtpPort === 465,
+            port: Number(process.env.MAIL_PORT) || 587,
+            secure: false,
+             requireTLS: true,
             auth: {
               user: process.env.MAIL_USER,
               pass: process.env.MAIL_PASS,
