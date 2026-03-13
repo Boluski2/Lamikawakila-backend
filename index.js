@@ -43,17 +43,23 @@ app.post('/', async (req, res) => {
     };
 
     try {
-          const smtpPort = Number(process.env.MAIL_PORT) || 587;
-          const transporter = nodemailer.createTransport({
-            host: process.env.MAIL_HOST,
-            port: Number(process.env.MAIL_PORT) || 587,
-            secure: false,
-             requireTLS: true,
-            auth: {
-              user: process.env.MAIL_USER,
-              pass: process.env.MAIL_PASS,
-            },
-          });
+          // const smtpPort = Number(process.env.MAIL_PORT) || 587;
+            const transporter = nodemailer.createTransport({
+          host: process.env.MAIL_HOST,
+          port: Number(process.env.MAIL_PORT) || 465,
+          secure: true,
+          secureConnection: false,
+          requireTLS: true,
+          tls: {
+            ciphers: "SSLv3",
+            rejectUnauthorized: false // Only use this for testing
+          },
+          connectionTimeout: 10000,
+          auth: {
+            user: process.env.MAIL_USER,
+            pass: process.env.MAIL_PASS,
+          },
+        });
 
         const mailOptions = {
           from: `"Lamikawakila Investments Limited" <${process.env.MAIL_USER}>`,
