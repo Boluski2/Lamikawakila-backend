@@ -55,15 +55,17 @@ app.post('/', async (req, res) => {
           });
 
         const mailOptions = {
-          from: `"Lamikawakila Investments" <${process.env.MAIL_USER}>`,
+          from: `"Lamikawakila Investments Limited" <${process.env.MAIL_USER}>`,
           to: process.env.RECIPIENT_EMAIL,
           replyTo: email,
           // Add additional headers for better email client compatibility
           headers: {
-            'X-Company-Name': 'Lamikawakila Investments',
+            'X-Company-Name': 'Lamikawakila Investments Limited',
             'X-Department': 'Customer Service',
             'X-Inquiry-Type': subjectLabels[subject] || subject,
-            'Return-Path': process.env.MAIL_USER
+            'Return-Path': process.env.MAIL_USER,
+             'Reply-To': email, // Explicitly set Reply-To header
+            'From': `"Lamikawakila Investments Limited" <${process.env.MAIL_USER}>`
           },
           subject: `New Contact Form Submission: ${subjectLabels[subject] || subject} from ${fullName} | Lamikawakila Investments`,
           html: `
