@@ -44,7 +44,6 @@ app.post('/', async (req, res) => {
 
     try {
           // const smtpPort = Number(process.env.MAIL_PORT) || 587;
-       try {
     const transporter = nodemailer.createTransport({
         host: process.env.MAIL_HOST,
         port: Number(process.env.MAIL_PORT) || 465, // Use 465 as default
@@ -63,6 +62,7 @@ app.post('/', async (req, res) => {
     await transporter.verify();
     console.log('SMTP connection verified');
     
+  
    
 
         const mailOptions = {
