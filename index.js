@@ -44,22 +44,26 @@ app.post('/', async (req, res) => {
 
     try {
           // const smtpPort = Number(process.env.MAIL_PORT) || 587;
-            const transporter = nodemailer.createTransport({
-          host: process.env.MAIL_HOST,
-          port: Number(process.env.MAIL_PORT) || 465,
-          secure: true,
-          secureConnection: false,
-          requireTLS: true,
-          tls: {
-            ciphers: "SSLv3",
-            rejectUnauthorized: false // Only use this for testing
-          },
-          connectionTimeout: 10000,
-          auth: {
+       try {
+    const transporter = nodemailer.createTransport({
+        host: process.env.MAIL_HOST,
+        port: Number(process.env.MAIL_PORT) || 465, // Use 465 as default
+        secure: true, // true for port 465
+        auth: {
             user: process.env.MAIL_USER,
             pass: process.env.MAIL_PASS,
-          },
-        });
+        },
+        // Add these for better compatibility
+        tls: {
+            rejectUnauthorized: false // Only if you have certificate issues
+        }
+    });
+    
+    // Test the connection
+    await transporter.verify();
+    console.log('SMTP connection verified');
+    
+   
 
         const mailOptions = {
           from: `"Lamikawakila Investments Limited" <${process.env.MAIL_USER}>`,
