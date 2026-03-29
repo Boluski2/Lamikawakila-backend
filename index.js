@@ -7,18 +7,25 @@ import dotenv from 'dotenv';
 dotenv.config();
 const app = express();
 const port = process.env.PORT || 3000;
-app.use(cors());
+app.use(cors({
+  origin: '*',
+  methods: ['POST', 'GET'],
+  allowedHeaders: ['Content-Type']
+}));
 
 app.use(bodyParser.json());
 
 app.get('/', (req, res) => {
+     console.log('Request received at:', new Date().toISOString());
+    console.log('Request body:', req.body);
+    console.log('Request headers:', req.headers);
   res.send('Server is running');
 });
 
-app.post('/', async (req, res) => {
-    if (req.method !== 'POST') {
-        return res.status(405).json({ status: 'failed', response: 'Method not allowed' });
-    }
+// app.post('/', async (req, res) => {
+//     if (req.method !== 'POST') {
+//         return res.status(405).json({ status: 'failed', response: 'Method not allowed' });
+//     }
 
     const { fullName, companyName, email, telephone, subject, message } = req.body;
 
@@ -44,27 +51,16 @@ app.post('/', async (req, res) => {
 
     try {
           // const smtpPort = Number(process.env.MAIL_PORT) || 587;
-    const transporter = nodemailer.createTransport({
-        host: process.env.MAIL_HOST,
-        port: Number(process.env.MAIL_PORT) || 465, // Use 465 as default
-        secure: true, // true for port 465
-        auth: {
-            user: process.env.MAIL_USER,
-            pass: process.env.MAIL_PASS,
-        },
-        // Add these for better compatibility
-        tls: {
-            rejectUnauthorized: false // Only if you have certificate issues
-        }
-    });
+          const transporter = nodemailer.createTransport({
+            host: process.env.MAIL_HOST,
+            port: 587,
+            secure: false, // VERY IMPORTANT (false for 587)
+            auth: {
+              user: process.env.MAIL_USER,
+              pass: process.env.MAIL_PASS,
+            },
+          });
     
-    // Test the connection
-    await transporter.verify();
-    console.log('SMTP connection verified');
-    
-  
-   
-
         const mailOptions = {
           from: `"Lamikawakila Investments Limited" <${process.env.MAIL_USER}>`,
           to: process.env.RECIPIENT_EMAIL,
@@ -289,7 +285,7 @@ To reply to ${fullName}, simply reply to this email or click here: mailto:${emai
         console.error('Email error:', error);
         return res.status(500).json({ status: 'failed', response: `Mailer Error: ${error.message}` });
     }
-});
+// });   
 
 app.listen(port, () => {
     console.log(`Server running at http://localhost:${port}`);
